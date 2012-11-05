@@ -1,0 +1,67 @@
+span.tfPrice {
+  cursor: default;
+  font-weight: bold;
+  color: #FFD700;
+}
+span.tfPrice:before {
+  content: "[";
+}
+span.tfPrice:after {
+  content: "]";
+}
+.ui-tooltip-content .itemName {
+  font-weight:bold;
+  font-size:18px;
+  display: block;
+}
+.ui-tooltip-content table td {
+  vertical-align: middle;
+}
+.ui-tooltip-content .description {
+  color: #BBB;
+}
+.ui-tooltip-content .value {
+  color: #EEE;
+}
+.ui-tooltip-content .restriction {
+  color: #E22;
+}
+.ui-tooltip-content .effect{
+  color: #EA1;
+}
+.ui-tooltip-content span {
+  display: block;
+  padding-top:5px;
+  font-size: 13px;
+  font-family: arial, sans-serif;
+  font-weight: normal;
+}
+
+/* Item Qualities */
+.tfPrice.vintage {
+  color: #476291 !important;
+}
+.tfPrice.genuine {
+  color: #4D7455 !important;
+}
+.tfPrice.strange {
+  color: #CF6A32 !important;
+}
+.tfPrice.haunted {
+  color: #38F3AB !important;
+}
+.tfPrice.unusual {
+  color: #8650AC !important;
+}
+.tfPrice.community {
+  color: #70B04A !important;
+}
+.tfPrice.valve {
+  color: #A50F79 !important;
+}
+.tfPrice.self-made {
+  color: #70B04A !important;
+}
+.tfPrice.unique { /* Note that this isn't the "correct" color, but rather Australium Gold */
+  color: #E7B53B !important;
+}
