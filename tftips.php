@@ -37,6 +37,19 @@ $removes = array( // Regular expressions to remove when performing the query
     '/^Self-Made /iu'
 );
 
+/* Given an item quality, determines if item is tradable */
+function isTradable($quality) {
+  switch ($quality) {
+    case '7': // Community
+    case '8': // Valve
+    case '9': // Self-Made
+      return false;
+    
+    default:
+      return true;
+  }
+}
+
 /* Set the quality of the item */
 if (preg_match('/^Vintage /iu', $itemname) || preg_match('/^V. /iu', $itemname)) { $quality = 3; } // Vintage
 elseif (preg_match('/^Genuine /iu', $itemname) || preg_match('/^G. /iu', $itemname)) { $quality = 1; } // Genuine
@@ -116,19 +129,22 @@ if ($quality == 5) {
    $q .= ' ORDER BY found DESC
    LIMIT 1';
 }
-else { /* Makes most searches (all non-unusual quality) faster than the above */
+else { /* Makes most searches (non-unusual quality) faster than the above */
    $q = 'SELECT item.item_name, item.proper_name, item.image_url, item.item_description, item.holiday_restriction, bp.quality, bp.effect, bp.value, item.rgb1
    FROM  `item_schema` as item ,  `backpack` as bp
    WHERE item.item_name LIKE "%'.$itemname.'%"
-   AND item.defindex = bp.defindex
-   AND bp.quality = '.$quality;
+   AND item.defindex = bp.defindex ';
+   if (isTradable($quality)) {
+    $q .= 'AND bp.quality = '.$quality;
+   }
    if (isset($effect)) {
        $q .= ' AND bp.effect = '.$effect[0];
    }
-   // Length is used so things like "Jarate" don't return "Emerald Jarate" on accident.
+   // Length is used so things like "Jarate" don't return "Emerald Jarate" on accident.  More specificity is better.
    $q .= ' ORDER BY LENGTH(item.item_name) ASC
    LIMIT 1';
 }
+
 $q = mysql_query($q) or die(mysql_error());
 $q = mysql_fetch_row($q);
 
@@ -137,6 +153,12 @@ if (!$q[0]) { // If the item name could not be found, exit with error message.
 }
 else {
 
+}
+
+// With the queries done, we can mess with the effect variable
+// for community weapons.
+if (!$effect && $quality == 7) {
+  $effect[1] = "Community Sparkle";
 }
 
 
@@ -156,7 +178,7 @@ echo '
             <td style="width:70%">
                 <span class="itemName">
                     <span style="color:'.$colors[$quality].'">';
-                        if ($q[1]) { echo 'The '; } // ProperName -> The
+                        if ($q[1]) { echo 'The '; } // ProperName -> "The "
                         echo $q[0].'
                     </span>
                 </span>
@@ -166,9 +188,14 @@ echo '
                 <span class="description">
                     '.$q[3].'
                 </span>
-                <span class="value">
-                    Suggested Price: '.$q[7].' ref
-                </span>
+                <span class="value">';
+                if (isTradable($quality)) {
+                  echo 'Suggested Price: '.$q[7].' ref';
+                }
+                else {
+                  echo 'Untradable';
+                }
+                echo '</span>
                 <span class="restriction">
                     '.str_replace('_',' ',$q[4]).'
                 </span>
