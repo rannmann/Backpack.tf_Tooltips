@@ -41,7 +41,7 @@ $(document).ready(function()
             else if (item.match(/^G. /i) || item.match(/^Genuine /i)) {
                 quality = "genuine";
             }
-            else if (item.match(/^S. /i) || item.match(/^Strange /i)) {
+            else if (item.match(/^S. /i) || item.match(/^Strange (?!Part)/i)) {
                 quality = "strange";
             }
             else if (item.match(/^H. /i) || item.match(/^Haunted /i)) {
