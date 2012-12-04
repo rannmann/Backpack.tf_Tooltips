@@ -25,7 +25,7 @@ $removes = array( // Regular expressions to remove when performing the query
     '/^V. /iu',
     '/^Genuine /iu',
     '/^G. /iu',
-    '/^Strange /iu',
+    '/^Strange (?!Part)/iu',
     '/^S. /iu',
     '/^Haunted /iu',
     '/^H. /iu',
@@ -53,7 +53,7 @@ function isTradable($quality) {
 /* Set the quality of the item */
 if (preg_match('/^Vintage /iu', $itemname) || preg_match('/^V. /iu', $itemname)) { $quality = 3; } // Vintage
 elseif (preg_match('/^Genuine /iu', $itemname) || preg_match('/^G. /iu', $itemname)) { $quality = 1; } // Genuine
-elseif (preg_match('/^Strange /iu', $itemname) || preg_match('/^S. /iu', $itemname)) { $quality = 11; } // Strange
+elseif (preg_match('/^Strange (?!Part)/iu', $itemname) || preg_match('/^S. /iu', $itemname)) { $quality = 11; } // Strange
 elseif (preg_match('/^Haunted /iu', $itemname) || preg_match('/^H. /iu', $itemname)) { $quality = 13; } // Haunted
 elseif (preg_match('/^Unusual /iu', $itemname) || preg_match('/^U. /iu', $itemname)) { $quality = 5; } // Unusual
 elseif (preg_match('/^Community /iu', $itemname) || preg_match('/^C. /iu', $itemname)) { $quality = 7; } // Community
