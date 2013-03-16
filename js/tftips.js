@@ -1,3 +1,20 @@
+/*
+ *   TF2 Tooltips
+ *   Copyright (C) 2012-2013  Jake "rannmann" Forrester
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 $(document).ready(function()
 {
     $('.tfPrice').each(function()
@@ -36,12 +53,17 @@ $(document).ready(function()
             var item = $(this).html();
             var quality;
             if (item.match(/^V. /i) || item.match(/^Vintage /i)) {
-                quality = "vintage";
+                // Curse whoever decided putting "Vintage" in an actual item name was a good idea
+                if (item.match(/^Vintage Merryweather/i) || item.match(/^Vintage Tyrolean/i)) {
+                    quality = 'unique';
+                } else {
+                    quality = "vintage";
+                }
             }
             else if (item.match(/^G. /i) || item.match(/^Genuine /i)) {
                 quality = "genuine";
             }
-            else if (item.match(/^S. /i) || item.match(/^Strange (?!Part)/i)) {
+            else if (item.match(/^S. /i) || item.match(/^Strange /i)) {
                 quality = "strange";
             }
             else if (item.match(/^H. /i) || item.match(/^Haunted /i)) {
@@ -64,5 +86,5 @@ $(document).ready(function()
             }
             return quality;
         });
-});
+    });
 });

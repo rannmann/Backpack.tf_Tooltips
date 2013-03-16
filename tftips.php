@@ -25,7 +25,7 @@ $removes = array( // Regular expressions to remove when performing the query
     '/^V. /iu',
     '/^Genuine /iu',
     '/^G. /iu',
-    '/^Strange (?!Part)/iu',
+    '/^Strange /iu',
     '/^S. /iu',
     '/^Haunted /iu',
     '/^H. /iu',
@@ -51,15 +51,31 @@ function isTradable($quality) {
 }
 
 /* Set the quality of the item */
-if (preg_match('/^Vintage /iu', $itemname) || preg_match('/^V. /iu', $itemname)) { $quality = 3; } // Vintage
-elseif (preg_match('/^Genuine /iu', $itemname) || preg_match('/^G. /iu', $itemname)) { $quality = 1; } // Genuine
-elseif (preg_match('/^Strange (?!Part)/iu', $itemname) || preg_match('/^S. /iu', $itemname)) { $quality = 11; } // Strange
-elseif (preg_match('/^Haunted /iu', $itemname) || preg_match('/^H. /iu', $itemname)) { $quality = 13; } // Haunted
-elseif (preg_match('/^Unusual /iu', $itemname) || preg_match('/^U. /iu', $itemname)) { $quality = 5; } // Unusual
-elseif (preg_match('/^Community /iu', $itemname) || preg_match('/^C. /iu', $itemname)) { $quality = 7; } // Community
-elseif (preg_match('/^Valve /iu', $itemname)) { $quality = 8; } // Valve (developer)
-elseif (preg_match('/^Self-Made /iu', $itemname)) { $quality = 9; } // Self-Made
-else { $quality = 6; } // Assume everything else is "Unique", as "Normal" only applies to stock items.
+if ( // Vintage
+      // Error handling for valve's stupid idea of putting "vintage" in the item names
+      ( !preg_match('/^Vintage Merryweather/iu', $itemname) &&  !preg_match('/^Vintage Tyrolean/iu', $itemname) &&
+      preg_match('/^Vintage /iu', $itemname) ) || 
+      preg_match('/^V. /iu', $itemname)) { $quality = 3; } 
+elseif ( // Genuine
+      preg_match('/^Genuine /iu', $itemname) || 
+      preg_match('/^G. /iu', $itemname)) { $quality = 1; } 
+elseif (// Strange
+      preg_match('/^Strange /iu', $itemname) ||  
+      preg_match('/^S. /iu', $itemname)) { $quality = 11; } 
+elseif (// Haunted
+      preg_match('/^Haunted /iu', $itemname) ||  
+      preg_match('/^H. /iu', $itemname)) { $quality = 13; } 
+elseif (// Unusual
+      preg_match('/^Unusual /iu', $itemname) ||  
+      preg_match('/^U. /iu', $itemname)) { $quality = 5; } 
+elseif (// Community
+      preg_match('/^Community /iu', $itemname) ||  
+      preg_match('/^C. /iu', $itemname)) { $quality = 7; } 
+elseif ( // Valve (developer)
+      preg_match('/^Valve /iu', $itemname)) { $quality = 8; } 
+elseif (
+      preg_match('/^Self-Made /iu', $itemname)) { $quality = 9; } // Self-Made
+else { $quality = 6; } // Assume everything else is "Unique"
 
 /* Check for effects */
 if ($quality  == 5) {
@@ -77,7 +93,8 @@ if ($quality  == 5) {
   $q = substr($q,0,-2); // Remove the last "+ "
   $q .= 'AS found
   FROM  `particle_schema` 
-  ORDER BY found DESC 
+  ORDER BY found DESC,
+           LENGTH(name) ASC
   LIMIT 1';
   $q = mysql_query($q) or die(mysql_error());
   $q = mysql_fetch_row($q);
@@ -88,7 +105,7 @@ if ($quality  == 5) {
 elseif (preg_match('/Crate /iu',$itemname) && !preg_match('/Key/iu',$itemname)) {
   foreach(explode(' ',$itemname) as $word) {
     if (preg_match('/^\#/',$word)) {
-      $effect = array(substr($word,1),$word); // 41, #41
+      $effect = array(substr($word,1),'Series ' . $word); // 41, Series #41
       break;
     }
   }
@@ -144,7 +161,6 @@ else { /* Makes most searches (non-unusual quality) faster than the above */
    $q .= ' ORDER BY LENGTH(item.item_name) ASC
    LIMIT 1';
 }
-
 $q = mysql_query($q) or die(mysql_error());
 $q = mysql_fetch_row($q);
 

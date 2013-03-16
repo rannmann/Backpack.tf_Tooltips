@@ -3,33 +3,129 @@
     <!--Stylesheets-->
     <link rel="stylesheet" type="text/css" href="./css/jquery.qtip.min.css" />
     <link rel="stylesheet" type="text/css" href="./css/tftips.css">
+
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:800italic' rel='stylesheet' type='text/css'>
+    <style type="text/css">
+        html {
+            background-color:#444;
+            font-family: sans-serif;
+            font-size:16px;
+            color: #f4f4f4;
+        }
+        .wrapper {
+            max-width: 1150px;
+            margin:0 auto;
+        }
+        .tfPrice {
+            font-size:14px;
+            font-weight: normal;
+        }
+        .note {
+            font-size:12px;
+            font-weight:normal;
+            color:#ddd;
+            background-color: #111;
+        }
+        p {
+            background-color:#222;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight:bold;
+        }
+        a {
+            text-decoration: none;
+            color:orange;
+        }
+        a:hover {
+            color:rgb(253,81,0);
+        }
+        tt {
+            color:#AEE;
+            font-size:14px;
+            padding: 10px 0;
+            display:block;
+        }
+        h1 {
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 800;
+            font-style: italic;
+            text-shadow: 1px 1px 3px #111;
+            font-size:  44px;
+            margin-bottom:16px;
+        }
+        ::selection {
+            background: #224;
+            color: #999;
+        }
+    </style>
 </head>
 <body>
-    <p>#1 <span class="tfPrice">Refined Metal</span></p>
-    <p>#2 <span class="tfPrice">The Wrap Assassin</span></p>
-    <p>#3 <span class="tfPrice">Tour of Duty Ticket</span></p>
-    <p>#4 <span class="tfPrice">Voodoo-Cursed Bag of Quicklime</span></p>
-    <p>#5 <span class="tfPrice">Haunted Dead Little Buddy</span></p>
-    <p>#6 <span class="tfPrice">Vintage Whiskered Gentleman</span></p>
-    <p>#7 <span class="tfPrice">V. whiskered gentleman</span></p>
-    <p>#8 <span class="tfPrice">Genuine Mask of the Shaman</span></p>
-    <p>#9 <span class="tfPrice">Strange Scattergun</span></p>
-    <p>#10 <span class="tfPrice">S. Scattergun</span></p>
-    <p>#11 <span class="tfPrice">Crate #44</span></p>
-    <p>#12 <span class="tfPrice">Battalion</span></p>
-    <p>#13 <span class="tfPrice">Crate Key</span></p>
-    <p>#14 <span class="tfPrice">Eerie Key</span></p>
-    <p>#15 <span class="tfPrice">Unusual Stout Shako Searing Plasma</span></p>
-    <p>#16 <span class="tfPrice">Unusual Stout Shako (Burning Flames)</span></p>
-    <p>#17 <span class="tfPrice">Crate #1</span></p>
-    <p>#18 <span class="tfPrice">Crate #10</span></p>
-    <p>#19 <span class="tfPrice">Crate #40</span></p>
-    <p>#20 <span class="tfPrice">Salvaged Crate #40</span></p>
-    <p>#21 <span class="tfPrice">Pink as Hell</span></p>
+    <div class="wrapper">
+        <h1>Backpack TF Tooltips</h1>
+        <p style="font-weight:normal;">
+            Oh, hey!  I'm a neat little script that pulls TF2 item data from <a href="http://backpack.tf">backpack.tf</a>'s and <a href="http://steampowered.com">SteamPowered</a>'s APIs (via PHP cronjobs), and turns the data into tooltips!  The only thing you have to do is wrap any item name, or part of an item name in some span tags, like so: <br />
+            <tt>&lt;span class="tfPrice"&gt;Refined Metal&lt;/span&gt;</tt>
+            This means I work great in places that use BBCode, and can easily be placed in any website that uses PHP &amp; MySQL.
+        </p>
+        <p>
+            Here are some example items:<br />
+            <br /><span class="tfPrice">Refined Metal</span>
+            <br /><span class="tfPrice">The Wrap Assassin</span>
+            <br /><span class="tfPrice">Tour of Duty Ticket</span>
+            <br /><span class="tfPrice">Voodoo-Cursed Bag of Quicklime</span>
+        </p>
+        <p>
+            I can parse item qualities... <br />
+            <br /><span class="tfPrice">Haunted Dead Little Buddy</span>
+            <br /><span class="tfPrice">Vintage Whiskered Gentleman</span>
+            <br /><span class="tfPrice">V. whiskered gentleman</span>
+            <br /><span class="tfPrice">Genuine Mask of the Shaman</span>
+            <br /><span class="tfPrice">Strange Scattergun</span>
+            <br /><span class="tfPrice">S. Scattergun</span>
+            <br /><span class="tfPrice">C. Stickybomb Launcher</span>
+            <br />
+            <br />auto complete item names...
+            <br /><span class="tfPrice">Battalion</span>
+            <br />
+            <br />and differentiate crate series
+            <br /><span class="tfPrice">Crate #1</span>
+            <br /><span class="tfPrice">Crate #10</span>
+            <br /><span class="tfPrice">Crate #40</span>
+            <br /><span class="tfPrice">Salvaged Crate #50</span>
+        </p>
+        <p>
+            Paints require the images to be hosted locally because Valve creates them by masking RGB colors over the image.  No worries though--I come with all the paint can images.<br />
+            <br /><span class="tfPrice">Pink as Hell</span>
+            <br /><span class="tfPrice">The Color of a Gentlemann's Business Pants</span>
+            <br /><span class="tfPrice">A Mann's Mint</span>
+            <br /><span class="tfPrice">Team Spirit</span>
+        </p>
+        <p>
+            My IQ is higher than Einstein's.  I know the difference between real vintages, and items with "Vintage" as part of their name. <br />
+            <br /><span class="tfPrice">V. Vintage Merryweather</span>
+            <br /><span class="tfPrice">Vintage Vintage Merryweather</span>
+            <br /><span class="tfPrice">Vintage Merryweather</span>
+            <br /><span class="tfPrice">Vintage Tyrolean</span>
+        </p>
+        <p>
+            Still not impressed?  Sheesh.  What if I could also parse unusual items with various effects?<br />
+            <span class="note">Note: Still working on it...  There's no standardized way to write effect names, so parsing can be a bit tricky.  <a href="https://github.com/rannmann/Backpack.tf_Tooltips/issues">Open an issue</a> if you come across a hat that is displaying as the wrong item.</span><br />
+            <br /><span class="tfPrice">Unusual Stout Shako Searing Plasma</span>
+            <br /><span class="tfPrice">Unusual Stout Shako (Burning Flames)</span>
+            <br /><span class="tfPrice">Unusual Brown Bomber (Orbiting Fire)</span>
+            <br /><span class="tfPrice">U. Sober Stuntman (Misty Skull)</span>
+        </p>
+        <p style="font-weight:normal;">
+            I can't do this alone!  I use <a href="http://jquery.com/">jQuery</a> and <a href="http://craigsworks.com/projects/qtip2/">qTip2</a> to create the actual tooltips.  Currently there is a <a href="https://github.com/Craga89/qTip2/issues/489">bug within qTip</a> where maximum-width on body elements can break the tooltip tracking.  If you run into this issue, apply your body stylings to a wrapper div and everything should be fine.
+        </p>
+
+        <footer style="margin-bottom:200px;text-align:right;font-size:11px;">Created by <a href="http://www.ranndesigns.com/">Jake "rannmann" Forrester</a><br /><br /><a href="http://www.gnu.org/licenses/gpl.html"><img src="http://www.gnu.org/graphics/gplv3-88x31.png" alt="GPL v3" style="background-color:white;"></a></footer>
+
+    </div>
 
     <!-- Javascript -->
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript" src="./js/jquery.qtip.min.js"></script>
-    <script type="text/javascript" src="./js/tftips.js"></script>    
+    <script type="text/javascript" src="./js/tftips.js"></script>
 </body>
 </html>

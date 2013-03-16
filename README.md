@@ -58,3 +58,41 @@ Data provided by [backpack.tf](http://backpack.tf/api) and [steampowered.com](ht
 A special thanks to the [DrunkenBombers](http://www.drunkenbombers.com) community for helping me debug.
 
 Questions?  Comments?  Open an issue or send me an email at [rannmann@rannmann.com](mailto:rannmann@rannmann.com).  I'd love to hear any feedback, good or bad!
+
+
+Version History
+----------------
+
+### 0.2.0
+
+Mostly bug fixes and some upgrades to support jQuery 1.9.0+.
+
+##### CHANGELOG
+
+* `backpack_db.php` - New error checking added to relay [backpack.tf](http://backpack.tf/api) API errors.
+* Fixed unusual effect "Orbiting Fire" from always attempting to find hats with "Eerie Orbiting Fire".
+* Fixed items with "Vintage" as part of the unique item name only showing vintage quality of items.
+* Fixed some line-wrap issues with tooltips
+* `index.html` - Updated example page to describe some features, and made it look a lot prettier.
+* `jquery.qtip.min.js` - Updated to support newer versions of jQuery.
+* Changed default width on tooltips to 410px
+* Changed default opacity of tooltips so they're more readable
+* Added the word "Series" before crate numbers
+* Added proper GPL headers.
+
+
+
+
+##### UPGRADING FROM PREVIOUS VERSIONS
+
+The following files should be updated:
+
+* `cron/backpack_db.php` - For error handling
+* `css/tftips.css` - For new formatting
+* `js/jquery.qtip.min.js` - New qTip version to support jQuery versions 1.9.0+
+* `js/tftips.js` - Fix vintage parsing on Vintage Merryweather and Vintage Tyrolean (which aren't vintage-quality!)
+* `tftips.php` - Many bug fixes.
+
+### 0.1.0 
+
+First release.

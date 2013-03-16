@@ -1,3 +1,20 @@
+/*
+ *   TF2 Tooltips
+ *   Copyright (C) 2012-2013  Jake "rannmann" Forrester
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 span.tfPrice {
   cursor: default;
   font-weight: bold;
@@ -9,27 +26,31 @@ span.tfPrice:before {
 span.tfPrice:after {
   content: "]";
 }
-.ui-tooltip-content .itemName {
+.qtip-content .itemName {
   font-weight:bold;
   font-size:18px;
   display: block;
 }
-.ui-tooltip-content table td {
+.qtip-content table td {
   vertical-align: middle;
 }
-.ui-tooltip-content .description {
+.qtip-content .description {
   color: #BBB;
+  display:block;
 }
-.ui-tooltip-content .value {
+.qtip-content .value {
   color: #EEE;
+  display:block;
 }
-.ui-tooltip-content .restriction {
+.qtip-content .restriction {
   color: #E22;
+  display:block;
 }
-.ui-tooltip-content .effect{
+.qtip-content .effect{
   color: #EA1;
+  display:block;
 }
-.ui-tooltip-content span {
+.qtip-content span {
   display: block;
   padding-top:5px;
   font-size: 13px;
@@ -64,4 +85,15 @@ span.tfPrice:after {
 }
 .tfPrice.unique { /* Note that this isn't the "correct" color, but rather Australium Gold */
   color: #E7B53B !important;
+}
+
+/*************************
+ * qTip Overrides 
+ *************************/
+.ui-tooltip, .qtip {
+  max-width:410px;
+}
+/* Slightly more Opaque */
+.ui-tooltip-tipsy {
+  background: rgba(0,0,0,.92);
 }
