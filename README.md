@@ -63,6 +63,13 @@ Questions?  Comments?  Open an issue or send me an email at [rannmann@rannmann.c
 Version History
 ----------------
 
+### 0.2.1
+
+##### CHANGELOG
+
+* `tftips.php` - Fixed Scorching Flames unusuals returning Burning Flames
+* Marginally increased efficiency of unusual searching
+
 ### 0.2.0
 
 Mostly bug fixes and some upgrades to support jQuery 1.9.0+.

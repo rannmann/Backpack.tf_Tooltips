@@ -88,7 +88,9 @@ if ($quality  == 5) {
    * so this will just "magically" figure it out. */
   $q = 'SELECT * , ';
   foreach(explode(' ',$itemname) as $word) {
-    $q .= 'IF( name LIKE "%'.preg_replace("/[^A-Za-z0-9 ]/", '', $word).'%", 1, 0 ) + ';
+    if (($word != "U.") && ($word != "Unusual")) {
+      $q .= 'IF( name LIKE "%'.preg_replace("/[^A-Za-z0-9 ]/", '', $word).'%", 1, 0 ) + ';
+    }
   }
   $q = substr($q,0,-2); // Remove the last "+ "
   $q .= 'AS found
