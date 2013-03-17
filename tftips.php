@@ -1,5 +1,21 @@
 <?php
-
+/*
+ *   TF2 Tooltips
+ *   Copyright (C) 2012-2013  Jake "rannmann" Forrester
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 include_once('config.php');
 
 $link = mysql_connect($server, $dbuser, $dbpass) or die(mysql_error());
@@ -60,7 +76,9 @@ elseif ( // Genuine
       preg_match('/^Genuine /iu', $itemname) || 
       preg_match('/^G. /iu', $itemname)) { $quality = 1; } 
 elseif (// Strange
-      preg_match('/^Strange /iu', $itemname) ||  
+      // Error handling for "strange" in item names
+      ( !preg_match('/^Strange Part/iu', $itemname) &&  !preg_match('/^Strange Bacon/iu', $itemname) &&
+      preg_match('/^Strange /iu', $itemname) ) ||  
       preg_match('/^S. /iu', $itemname)) { $quality = 11; } 
 elseif (// Haunted
       preg_match('/^Haunted /iu', $itemname) ||  

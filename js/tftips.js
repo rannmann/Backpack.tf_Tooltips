@@ -64,7 +64,11 @@ $(document).ready(function()
                 quality = "genuine";
             }
             else if (item.match(/^S. /i) || item.match(/^Strange /i)) {
+                if (item.match(/^Strange Part/i) || item.match(/^Strange Bacon/i)) {
+                    quality = 'unique';
+                } else {
                 quality = "strange";
+                }
             }
             else if (item.match(/^H. /i) || item.match(/^Haunted /i)) {
                 quality = "haunted";

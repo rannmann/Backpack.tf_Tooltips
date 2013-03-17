@@ -63,6 +63,17 @@ Questions?  Comments?  Open an issue or send me an email at [rannmann@rannmann.c
 Version History
 ----------------
 
+### 0.2.2
+
+Bug fixes
+
+##### CHANGELOG
+
+* `tftips.php` - Fixed Strange Bacon Grease showing up as a strange-quality item
+* `tftips.php` - Fixed Strange Parts showing up as strange-quality items
+* `js/tftips.js` - Fixed display of Strange Parts and Strange Bacon Grease
+* `index.html` - Added examples of non-strage strange-prefixed items
+
 ### 0.2.1
 
 ##### CHANGELOG
