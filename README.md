@@ -14,7 +14,7 @@ This library provides Team Fortress 2 item tooltips to any item, based off a nam
 * Backpack.tf estimated value
 * Holiday restriction information
 
-Normally I'd provide an example page here, but until I set one up, [here is an example use case](http://www.drunkenbombers.com/forums/showthread.php?983-Forum-TF2-Item-Links).
+[Here is an example page which is included with this repo](http://ranndesigns.com/tf2/BackpackTF_Tooltips/).
 
 
 
@@ -63,6 +63,15 @@ Questions?  Comments?  Open an issue or send me an email at [rannmann@rannmann.c
 Version History
 ----------------
 
+### 0.2.3
+
+Added support for jQuery's noConflict mode.  This means tooltips can work on IPB now.
+
+##### CHANGELOG
+
+* `js/tftips.js` - Changed instances of $ to jQuery, and pass $ as a parameter to qTip2
+
+
 ### 0.2.2
 
 Bug fixes
@@ -74,12 +83,14 @@ Bug fixes
 * `js/tftips.js` - Fixed display of Strange Parts and Strange Bacon Grease
 * `index.html` - Added examples of non-strage strange-prefixed items
 
+
 ### 0.2.1
 
 ##### CHANGELOG
 
 * `tftips.php` - Fixed Scorching Flames unusuals returning Burning Flames
 * Marginally increased efficiency of unusual searching
+
 
 ### 0.2.0
 
@@ -98,9 +109,6 @@ Mostly bug fixes and some upgrades to support jQuery 1.9.0+.
 * Added the word "Series" before crate numbers
 * Added proper GPL headers.
 
-
-
-
 ##### UPGRADING FROM PREVIOUS VERSIONS
 
 The following files should be updated:
@@ -110,6 +118,7 @@ The following files should be updated:
 * `js/jquery.qtip.min.js` - New qTip version to support jQuery versions 1.9.0+
 * `js/tftips.js` - Fix vintage parsing on Vintage Merryweather and Vintage Tyrolean (which aren't vintage-quality!)
 * `tftips.php` - Many bug fixes.
+
 
 ### 0.1.0 
 

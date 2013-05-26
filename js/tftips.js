@@ -15,26 +15,26 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-$(document).ready(function()
+jQuery(document).ready(function()
 {
-    $('.tfPrice').each(function()
+    jQuery('.tfPrice').each(function($) // Pass $ just in case $.noConflict was declared.
     {
 
-        $(this).qtip({
+        jQuery(this).qtip({
             content: {
                 text: 'Loading...',
                 ajax: {
                      url: './tftips.php', // Grab price data from script...
                      type: 'POST',
                      data: {
-                        itemname: $(this).html() // .. and send item name
+                        itemname: jQuery(this).html() // .. and send item name
                     }
                 }
             },
             position: {
                 my: 'top left',
                 target: 'mouse',
-                    viewport: $(window), // Keep it on-screen at all times if possible
+                    viewport: jQuery(window), // Keep it on-screen at all times if possible
                     adjust: {
                         x: 10,  y: 10
                     }
@@ -48,9 +48,9 @@ $(document).ready(function()
             });
 
         // Add the item quality classes
-        $(this).addClass(function()
+        jQuery(this).addClass(function()
         {
-            var item = $(this).html();
+            var item = jQuery(this).html();
             var quality;
             if (item.match(/^V. /i) || item.match(/^Vintage /i)) {
                 // Curse whoever decided putting "Vintage" in an actual item name was a good idea
