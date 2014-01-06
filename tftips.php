@@ -32,7 +32,8 @@ $colors = array( // Hex colors for name display
     8  => '#A50F79', // Valve
     9  => '#70B04A', // Self-Made
     11 => '#CF6A32', // Strange
-    13 => '#38F3AB' // Haunted
+    13 => '#38F3AB', // Haunted
+    14 => '#A00' // Collector's
 );
 
 $removes = array( // Regular expressions to remove when performing the query
@@ -45,6 +46,7 @@ $removes = array( // Regular expressions to remove when performing the query
     '/^S. /iu',
     '/^Haunted /iu',
     '/^H. /iu',
+    "/^Collect[oe]r(\\\')?s? /iu",
     '/^Unusual /iu',
     '/^U. /iu',
     '/^Community /iu',
@@ -86,6 +88,8 @@ elseif (// Haunted
 elseif (// Unusual
       preg_match('/^Unusual /iu', $itemname) ||  
       preg_match('/^U. /iu', $itemname)) { $quality = 5; } 
+elseif (// Collector's
+      preg_match("/^Collect[oe]r(\\\')?s? /iu", $itemname)) { $quality = 14; }
 elseif (// Community
       preg_match('/^Community /iu', $itemname) ||  
       preg_match('/^C. /iu', $itemname)) { $quality = 7; } 

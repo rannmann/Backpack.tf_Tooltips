@@ -83,6 +83,9 @@ span.tfPrice:after {
 .tfPrice.self-made {
   color: #70B04A !important;
 }
+.tfPrice.collectors {
+  color: #A00 !important;
+}
 .tfPrice.unique { /* Note that this isn't the "correct" color, but rather Australium Gold */
   color: #E7B53B !important;
 }

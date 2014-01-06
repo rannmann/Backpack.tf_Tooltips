@@ -70,6 +70,9 @@ jQuery(document).ready(function()
                 quality = "strange";
                 }
             }
+            else if (item.match(/^Collect[oe]r'?s? /i)) {
+                quality = "collectors";
+            }
             else if (item.match(/^H. /i) || item.match(/^Haunted /i)) {
                 quality = "haunted";
             }
