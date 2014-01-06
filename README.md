@@ -63,6 +63,11 @@ Questions?  Comments?  Open an issue or send me an email at [rannmann@rannmann.c
 Version History
 ----------------
 
+### 0.2.4
+
+Added Collector's items
+
+
 ### 0.2.3
 
 Added support for jQuery's noConflict mode.  This means tooltips can work on IPB now.
