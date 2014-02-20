@@ -74,7 +74,7 @@ foreach($prepare as $v) {
 mysql_query(substr($q,0,-2)) or die(mysql_error());
 
 /* Insert row into the info table to show last update */
-$q = "CREATE TABLE IF NOT EXISTS `info` (
+$q = "CREATE TABLE IF NOT EXISTS $infotable (
   `id` int(10) NOT NULL auto_increment,
   `lastupdate` int(11) NOT NULL,
   `usdvalue` double default NULL,
