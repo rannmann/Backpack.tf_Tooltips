@@ -36,7 +36,7 @@ function file_get_data($url) {
 }
 
 
-$raw = file_get_data('http://backpack.tf/api/IGetPrices/v2/?format=json&currency=metal') or die('Error connecting');
+$raw = file_get_data('http://backpack.tf/api/IGetPrices/v2/?format=json&currency=metal&key=' . $bptf_api_key) or die('Error connecting');
 $prices = json_decode($raw,true);
 foreach($prices['response'] as $key => $value) {
   if ($key == 'prices') {
