@@ -14,7 +14,7 @@ This library provides Team Fortress 2 item tooltips to any item, based off a nam
 * Backpack.tf estimated value
 * Holiday restriction information
 
-[Here is an example page which is included with this repo](http://ranndesigns.com/tf2/BackpackTF_Tooltips/).
+[Here is an example page which is included with this repo](http://dev.rannmann.com/Backpack.tf_Tooltips/).
 
 
 
