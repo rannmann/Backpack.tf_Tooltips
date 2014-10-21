@@ -157,7 +157,7 @@ if ($quality == 5) {
     */
     $q = 'SELECT item.item_name, item.proper_name, item.image_url, item.item_description, item.holiday_restriction, bp.quality, bp.effect, bp.value, bp.currency, ';
     foreach(explode(' ',$itemname) as $word) {
-        $q .= 'IF( item.item_name LIKE "%'.$word.'%", 1, 0 ) + ';
+        $q .= 'IF( item.item_name LIKE \'%'.$word.'%\', 1, 0 ) + ';
     }
     $q = substr($q,0,-2); // Remove the last "+ "
     $q .= 'AS found
@@ -185,14 +185,12 @@ else { /* Makes most searches (non-unusual quality) faster than the above */
    $q .= ' ORDER BY LENGTH(item.item_name) ASC
    LIMIT 1';
 }
+
 $q = mysql_query($q) or die(mysql_error());
 $q = mysql_fetch_row($q);
 
 if (!$q[0]) { // If the item name could not be found, exit with error message.
     die('Error: Item not found!'); 
-}
-else {
-
 }
 
 // With the queries done, we can mess with the effect variable
