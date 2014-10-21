@@ -63,6 +63,16 @@ Questions?  Comments?  Open an issue or send me an email at [rannmann@rannmann.c
 Version History
 ----------------
 
+### 1.0.0
+
+* Rewrote backpack.tf cronjob to be compatible with v4 of the API.  Database table structure changed a bit due to this.
+    * Added four new columns
+        * `currency` - The currency the item's price is in (ex: metal, keys, earbuds, usd)
+        * `value_raw` -  The item's value in metal without rounding.  If a price range exists, this is the average between the high and low value.
+        * `tradable` - An enum denoting "Tradable" or "Non-Tradable"
+        * `craftable` - An enum denoting "Craftable" or "Non-Craftable"
+    * Changed `value` column units to `currency` rather than the default _refined metal_
+
 ### 0.2.4
 
 Added Collector's items
