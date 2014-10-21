@@ -69,16 +69,16 @@ foreach($prices['response']['items'] as $itemname => $obj) { // Ugly, but comple
 }
 /* Create the temporary table */
 $q = "CREATE TABLE IF NOT EXISTS $bp_table_temp (
-  `defindex` int(6) NOT NULL,
+  `defindex` SMALLINT(5) NOT NULL,
   `quality` int(3) NOT NULL,
-  `effect` int(5) default NULL,
-  `value` double NOT NULL,
-  `last_change` double default NULL,
+  `effect` SMALLINT(4) UNSIGNED NOT NULL,
+  `value` FLOAT NOT NULL,
+  `last_change` FLOAT NOT NULL,
   `last_update` int(10) unsigned default NULL,
   `currency` varchar(20) default 'metal',
-  `value_raw` double default NULL,
-  `tradable` varchar(13) default NULL,
-  `craftable` varchar(14) default NULL
+  `value_raw` FLOAT NOT NULL,
+  `tradable` ENUM('Non-Tradable','Tradable') NOT NULL,
+  `craftable` ENUM('Craftable','Non-Craftable') NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 mysql_query($q) or die("Unable to create table: " . mysql_error());
 $query_count++;
