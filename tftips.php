@@ -155,7 +155,7 @@ if ($quality == 5) {
     AND bp.effect = 15
     ORDER BY found DESC
     */
-    $q = 'SELECT item.item_name, item.proper_name, item.image_url, item.item_description, item.holiday_restriction, bp.quality, bp.effect, bp.value, ';
+    $q = 'SELECT item.item_name, item.proper_name, item.image_url, item.item_description, item.holiday_restriction, bp.quality, bp.effect, bp.value, bp.currency, ';
     foreach(explode(' ',$itemname) as $word) {
         $q .= 'IF( item.item_name LIKE "%'.$word.'%", 1, 0 ) + ';
     }
@@ -171,7 +171,7 @@ if ($quality == 5) {
    LIMIT 1';
 }
 else { /* Makes most searches (non-unusual quality) faster than the above */
-   $q = 'SELECT item.item_name, item.proper_name, item.image_url, item.item_description, item.holiday_restriction, bp.quality, bp.effect, bp.value, item.rgb1
+   $q = 'SELECT item.item_name, item.proper_name, item.image_url, item.item_description, item.holiday_restriction, bp.quality, bp.effect, bp.value, bp.currency, item.rgb1
    FROM  `item_schema` as item ,  `backpack` as bp
    WHERE item.item_name LIKE "%'.$itemname.'%"
    AND item.defindex = bp.defindex ';
@@ -210,7 +210,7 @@ echo '
                 <img src="';
                 if ( ($q[2] == "http://media.steampowered.com/apps/440/icons/teampaint.1a4edd3437656c11c51bf790de36f84689375217.png") || // Team paint URL
                      ($q[2] == "http://media.steampowered.com/apps/440/icons/paintcan.9046edf23b64960a4084dad29d05d2c902feec78.png") ) { // Regular paint URL
-                     echo $paintdir.'Paint_Can_'.strtoupper($q[8]).'.png'; // Paint_Can_FF69B4.png, for example
+                     echo $paintdir.'Paint_Can_'.strtoupper($q[9]).'.png'; // Paint_Can_FF69B4.png, for example
                 }
                 else { echo $q[2]; } // Otherwise just use the steam-given URL.
                 echo '">
@@ -230,7 +230,9 @@ echo '
                 </span>
                 <span class="value">';
                 if (isTradable($quality)) {
-                  echo 'Suggested Price: '.$q[7].' ref';
+                  if ($q[8] == 'metal')
+                    $q[8] = 'refined';
+                  echo "Suggested Price: {$q[7]} {$q[8]}";
                 }
                 else {
                   echo 'Untradable';
