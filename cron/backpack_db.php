@@ -1,7 +1,8 @@
 <?php
 /*
  *   Backpack.tf Database Importer
- *   Copyright (C) 2012-2013  Jake "rannmann" Forrester
+ *   For use with v4 of the Backpack.tf API
+ *   Copyright (C) 2012-2014  Jake "rannmann" Forrester
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -20,6 +21,7 @@
 include_once('../config.php');
 
 $time_start = microtime(true);
+$query_count = 0;
 
 $link = mysql_connect($server, $dbuser, $dbpass);
 mysql_select_db($database);
@@ -35,24 +37,34 @@ function file_get_data($url) {
     return $data;
 }
 
-
-$raw = file_get_data('http://backpack.tf/api/IGetPrices/v2/?format=json&currency=metal&key=' . $bptf_api_key) or die('Error connecting');
+$raw = file_get_data('http://backpack.tf/api/IGetPrices/v4/?key=' . $bptf_api_key . '&compress=1&raw=1') or die('Error connecting');
 $prices = json_decode($raw,true);
-foreach($prices['response'] as $key => $value) {
-  if ($key == 'prices') {
-    foreach($value as $item => $quality) {  // $item = defindex
-      foreach($quality as $qual => $effect) {
-        foreach($effect as $eff => $stats) {
-          $prepare[] = array($item,$qual,$eff,$stats['value'],$stats['last_change'],$stats['last_update']);
+if ($prices['response']['success'] == 0) {
+    die('Error recieved from backpack.tf: ' . $prices['response']['message']);
+}
+foreach($prices['response']['items'] as $itemname => $obj) { // Ugly, but completes in about 0.2 seconds.
+  $defindexes = $obj['defindex'];
+  foreach($obj['prices'] as $quality => $tradable) {
+    foreach($tradable as $tradable => $craftable) { 
+      foreach($craftable as $craftable => $priceindex) { // Priceindex = crate series or unusual effect. 0 otherwise.
+        foreach($priceindex as $effect => $stats) {
+          foreach($defindexes as $defindex) {
+            $prepare[] = array(
+              'defindex'    => $defindex,
+              'quality'     => $quality,
+              'effect'      => $effect,
+              'value'       => $stats['value'],
+              'last_change' => $stats['difference'], // Last price change
+              'last_update' => $stats['last_update'],
+              'currency'    => $stats['currency'],
+              'value_raw'   => $stats['value_raw'],
+              'tradable'    => $tradable, // Tradable/Non-Tradable
+              'craftable'   => $craftable // Craftable/Non-Craftable
+            );
+          }
         }
       }
     }
-  }
-  elseif ($key == 'error') {
-    die('Error recieved from backpack.tf: ' . $value);
-  }
-  else {
-    $info[$key] = $value;
   }
 }
 /* Create the temporary table */
@@ -62,39 +74,50 @@ $q = "CREATE TABLE IF NOT EXISTS $bp_table_temp (
   `effect` int(5) default NULL,
   `value` double NOT NULL,
   `last_change` double default NULL,
-  `last_update` int(10) unsigned default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;";
+  `last_update` int(10) unsigned default NULL,
+  `currency` varchar(20) default 'metal',
+  `value_raw` double default NULL,
+  `tradable` varchar(13) default NULL,
+  `craftable` varchar(14) default NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 mysql_query($q) or die("Unable to create table: " . mysql_error());
-
+$query_count++;
 /* Insert backpack.tf data into temporary table */
-$q = "INSERT INTO $bp_table_temp (defindex, quality, effect, value, last_change, last_update) VALUES ";
+$q = "INSERT INTO $bp_table_temp VALUES ";
 foreach($prepare as $v) {
-  $q .= "('".$v[0]."','".$v[1]."','".$v[2]."','".$v[3]."','".$v[4]."','".$v[5]."'), ";
+  //$q .= "('".$v[0]."','".$v[1]."','".$v[2]."','".$v[3]."','".$v[4]."','".$v[5]."'), ";
+  $q .= vsprintf("('%d', '%d', '%d', '%.2f', '%.2f', '%u', '%s', '%.2f', '%s', '%s'), ", $v);
+  $item_count++;
 }
 mysql_query(substr($q,0,-2)) or die(mysql_error());
+$query_count++;
 
-/* Insert row into the info table to show last update */
+/* Insert row into the info table to show last update + USD value of ref */
 $q = "CREATE TABLE IF NOT EXISTS $infotable (
   `id` int(10) NOT NULL auto_increment,
   `lastupdate` int(11) NOT NULL,
   `usdvalue` double default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;";
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
 mysql_query($q) or die(mysql_error());
-$q = "INSERT INTO $infotable (lastupdate, usdvalue) VALUES ('".$info['current_time']."','".$info['refined_usd_value']."')";
+$query_count++;
+$q = "INSERT INTO $infotable (lastupdate, usdvalue) VALUES ('".$prices['response']['current_time']."','".$prices['response']['raw_usd_value']."')";
 mysql_query($q) or die(mysql_error());
+$query_count++;
 
 /* Drop old table if it exists */
 $q = "DROP TABLE IF EXISTS $bp_table";
 mysql_query($q) or die(mysql_error());
+$query_count++;
 
 /* Rename temporary table to new table */
 $q = "RENAME TABLE $bp_table_temp TO $bp_table";
 mysql_query($q) or die(mysql_error());
+$query_count++;
 
 $time_end = microtime(true);
 $time = $time_end - $time_start;
 
-echo "1 download and 6 queries completed successfully in $time seconds.";
+echo "1 download, $item_count prices found, and $query_count queries completed successfully in $time seconds.";
 
 ?>
