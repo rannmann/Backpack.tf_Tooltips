@@ -4,7 +4,7 @@
 $steam_api_key = ''; // Get one here: http://steamcommunity.com/dev/apikey
 
 /* Backpack.tf API key */
-$bptf_api_key = '' // Get one here: http://backpack.tf/api
+$bptf_api_key = ''; // Get one here: http://backpack.tf/api
 
 /* Database General */
 $server = 'localhost';
