@@ -63,6 +63,15 @@ Questions?  Comments?  Open an issue or send me an email at [rannmann@rannmann.c
 Version History
 ----------------
 
+### 1.1.0
+
+* Item parsing no longer requires a price to be set on backpack.tf.  Will show "N/A" if no price found
+* Improved item lookup efficiency, especially with Unusuals
+* Refactored searching to be more readable and editable
+
+The way searching works has changed considerably, so _please_ open a ticket if an item isn't displaying correctly anymore.
+
+
 ### 1.0.0
 
 * Rewrote backpack.tf cronjob to be compatible with v4 of the API.  Database table structure changed a bit due to this.
@@ -72,6 +81,7 @@ Version History
         * `tradable` - An enum denoting "Tradable" or "Non-Tradable"
         * `craftable` - An enum denoting "Craftable" or "Non-Craftable"
     * Changed `value` column units to `currency` rather than the default _refined metal_
+
 
 ### 0.2.4
 
