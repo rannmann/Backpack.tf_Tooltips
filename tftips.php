@@ -102,12 +102,12 @@ else { $quality = 6; } // Assume everything else is "Unique"
 /* Check for effects */
 if ($quality  == 5) {
   /* Bear with me... this is super hacksy because I'm not a DBA.
-   * This loops through each word in a sentence
+   * This loops through each word in an item name
    * performing a wildcard "LIKE" match and incrementing 
    * a counter.  The results are sorted by the number of matches
    * and the one with the greatest matches is returned.
    * There's no standardized way of traders using effect names,
-   * so this will just "magically" figure it out. */
+   * so this should just "magically" figure it out. */
   $q = 'SELECT * , ';
   foreach(explode(' ',$itemname) as $word) {
     if (($word != "U.") && ($word != "Unusual")) {
@@ -133,7 +133,8 @@ elseif (preg_match('/Crate /iu',$itemname) && !preg_match('/Key/iu',$itemname)) 
       break;
     }
   }
-  $itemname = 'Mann Co. Supply Crate';
+  if (preg_match('/^Crate /iu', $itemname)) // Replace short names "Crate" with actual item name
+    $itemname = 'Mann Co. Supply Crate';
 }
 
 
@@ -141,36 +142,59 @@ $itemname = preg_replace($removes,'',$itemname); // remove all prefixes
 
 
 if ($quality == 5) {
-    /*
-    This is pretty confusing, so here's what it's creating.  This had to be done because of hat effects as noted above.
-    SELECT item.item_name, item.proper_name, item.image_url, item.item_description, item.holiday_restriction, bp.quality, bp.effect, bp.value, 
-    IF( item.item_name LIKE "%Unusual%", 1, 0 ) + 
-    IF( item.item_name LIKE "%Stout%", 1, 0 ) + 
-    IF( item.item_name LIKE "%Shako%", 1, 0 ) + 
-    IF( item.item_name LIKE "%Searing%", 1, 0 ) + 
-    IF( item.item_name LIKE "%Flames%", 1, 0 ) AS found
-    FROM  `item_schema` as item ,  `backpack` as bp
-    WHERE item.defindex = bp.defindex
-    AND bp.quality = 5
-    AND bp.effect = 15
-    ORDER BY found DESC
-    */
-    $q = 'SELECT item.item_name, item.proper_name, item.image_url, item.item_description, item.holiday_restriction, bp.quality, bp.effect, bp.value, bp.currency, ';
-    foreach(explode(' ',$itemname) as $word) {
-        $q .= 'IF( item.item_name LIKE \'%'.$word.'%\', 1, 0 ) + ';
-    }
-    $q = substr($q,0,-2); // Remove the last "+ "
-    $q .= 'AS found
-    FROM  `item_schema` as item ,  `backpack` as bp
-    WHERE item.defindex = bp.defindex
-    AND bp.quality = '.$quality;
+    // Try to remove everything we already know
     if (isset($effect)) {
-       $q .= ' AND bp.effect = '.$effect[0];
-   }
-   $q .= ' ORDER BY found DESC
-   LIMIT 1';
+        $itemname = preg_replace("/{$effect[1]}/", '', $itemname); // Effect
+    }
+    // Remove braces if they exist just to make the query slightly faster by not counting " ()"" as a word
+    $itemname = trim(str_replace(array('(',')'),'',$itemname));
 }
-else { /* Makes most searches (non-unusual quality) faster than the above */
+
+// Query to find the best matching item
+$q = 'SELECT item.item_name, item.proper_name, item.image_url, item.item_description, item.holiday_restriction, item.defindex, item.rgb1, ';
+foreach(explode(' ',$itemname) as $word) {
+    $q .= 'IF( item.item_name LIKE \'%'.$word.'%\', 1, 0 ) + ';
+}
+$q = substr($q,0,-2); // Remove the last "+ "
+$q .= 'AS found
+FROM `'.$item_table.'` as item
+ORDER BY found DESC, LENGTH(item.item_name) ASC
+LIMIT 1';
+
+$q = mysql_query($q) or die(mysql_error()); 
+$item = mysql_fetch_assoc($q);
+
+// Query to find the price of the item, if it exists
+$q = "SELECT bp.last_update, bp.last_change, bp.value, bp.currency FROM `$bp_table` as bp WHERE bp.defindex = {$item['defindex']} AND bp.quality = $quality ";
+if (isset($effect))
+  $q .= "AND bp.effect = {$effect[0]} ";
+$q .= "LIMIT 1";
+
+$q = mysql_query($q) or die(mysql_error()); 
+$price = mysql_fetch_assoc($q);
+
+// Format it so displaying makes more sense
+$result = array(
+    'name'    => ($item['proper_name'] ? 'The ' . $item['item_name'] : $item['item_name']),
+    'img'     => $item['image_url'],
+    'desc'    => $item['item_description'],
+    'holiday' => $item['holiday_restriction'],
+    'quality' => $quality,
+    'effect'  => $effect[1],
+    'rgb1'    => $item['rgb1']
+);
+if ($price) {
+    $result['value']       = $price['value'];
+    $result['currency']    = $price['currency'];
+    $result['last_update'] = $price['last_update'];
+    $result['change']      = $price['last_change'];
+} else {
+    $result['value']       = "N/A";
+    $result['currency']    = "";
+}
+/*
+}
+else { 
    $q = 'SELECT item.item_name, item.proper_name, item.image_url, item.item_description, item.holiday_restriction, bp.quality, bp.effect, bp.value, bp.currency, item.rgb1
    FROM  `item_schema` as item ,  `backpack` as bp
    WHERE item.item_name LIKE "%'.$itemname.'%"
@@ -192,11 +216,11 @@ $q = mysql_fetch_row($q);
 if (!$q[0]) { // If the item name could not be found, exit with error message.
     die('Error: Item not found!'); 
 }
+*/
 
-// With the queries done, we can mess with the effect variable
-// for community weapons.
+// Fix for community weapons
 if (!$effect && $quality == 7) {
-  $effect[1] = "Community Sparkle";
+  $result['effect'] = "Community Sparkle";
 }
 
 
@@ -206,38 +230,37 @@ echo '
         <tr>
             <td style="width:30%">
                 <img src="';
-                if ( ($q[2] == "http://media.steampowered.com/apps/440/icons/teampaint.1a4edd3437656c11c51bf790de36f84689375217.png") || // Team paint URL
-                     ($q[2] == "http://media.steampowered.com/apps/440/icons/paintcan.9046edf23b64960a4084dad29d05d2c902feec78.png") ) { // Regular paint URL
-                     echo $paintdir.'Paint_Can_'.strtoupper($q[9]).'.png'; // Paint_Can_FF69B4.png, for example
+                if ( ($result['img'] == "http://media.steampowered.com/apps/440/icons/teampaint.1a4edd3437656c11c51bf790de36f84689375217.png") || // Team paint URL
+                     ($result['img'] == "http://media.steampowered.com/apps/440/icons/paintcan.9046edf23b64960a4084dad29d05d2c902feec78.png") ) { // Regular paint URL
+                     echo $paintdir.'Paint_Can_'.strtoupper($result['rgb1']).'.png'; // Paint_Can_FF69B4.png, for example
                 }
-                else { echo $q[2]; } // Otherwise just use the steam-given URL.
+                else { echo $result['img']; } // Otherwise just use the steam-given URL.
                 echo '">
             </td>
             <td style="width:70%">
                 <span class="itemName">
-                    <span style="color:'.$colors[$quality].'">';
-                        if ($q[1]) { echo 'The '; } // ProperName -> "The "
-                        echo $q[0].'
+                    <span style="color:'.$colors[$quality].'">
+                        '.$result['name'].'
                     </span>
                 </span>
         <span class="effect">
-                    '.$effect[1].'
+                    '.$result['effect'].'
                 </span>
                 <span class="description">
-                    '.$q[3].'
+                    '.$result['desc'].'
                 </span>
                 <span class="value">';
                 if (isTradable($quality)) {
-                  if ($q[8] == 'metal')
-                    $q[8] = 'refined';
-                  echo "Suggested Price: {$q[7]} {$q[8]}";
+                  if ($result['currency'] == 'metal')
+                    $result['currency'] = 'refined'; // Just to change "metal" to "refined" so there's no confusion
+                  echo "Suggested Price: {$result['value']} {$result['currency']}";
                 }
                 else {
                   echo 'Untradable';
                 }
                 echo '</span>
                 <span class="restriction">
-                    '.str_replace('_',' ',$q[4]).'
+                    '.str_replace('_',' ',$result['holiday']).'
                 </span>
             </td>
         </tr>
