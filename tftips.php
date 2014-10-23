@@ -38,7 +38,7 @@ $colors = array( // Hex colors for name display
 
 $removes = array( // Regular expressions to remove when performing the query
     '/^The /iu',
-    '/^Vintage /iu',
+//    '/^Vintage /iu',
     '/^V. /iu',
     '/^Genuine /iu',
     '/^G. /iu',
