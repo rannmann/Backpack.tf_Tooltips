@@ -192,38 +192,13 @@ if ($price) {
     $result['value']       = "N/A";
     $result['currency']    = "";
 }
-/*
-}
-else { 
-   $q = 'SELECT item.item_name, item.proper_name, item.image_url, item.item_description, item.holiday_restriction, bp.quality, bp.effect, bp.value, bp.currency, item.rgb1
-   FROM  `item_schema` as item ,  `backpack` as bp
-   WHERE item.item_name LIKE "%'.$itemname.'%"
-   AND item.defindex = bp.defindex ';
-   if (isTradable($quality)) {
-    $q .= 'AND bp.quality = '.$quality;
-   }
-   if (isset($effect)) {
-       $q .= ' AND bp.effect = '.$effect[0];
-   }
-   // Length is used so things like "Jarate" don't return "Emerald Jarate" on accident.  More specificity is better.
-   $q .= ' ORDER BY LENGTH(item.item_name) ASC
-   LIMIT 1';
-}
-
-$q = mysql_query($q) or die(mysql_error());
-$q = mysql_fetch_row($q);
-
-if (!$q[0]) { // If the item name could not be found, exit with error message.
-    die('Error: Item not found!'); 
-}
-*/
 
 // Fix for community weapons
 if (!$effect && $quality == 7) {
   $result['effect'] = "Community Sparkle";
 }
 
-
+// Feel free to play with this.  Not all information available is displayed below.
 echo '
 <table style="width:100%">
     <tbody>
